@@ -1,117 +1,253 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Truck, Gift } from "lucide-react";
+import { CheckCircle, Zap } from "lucide-react";
 
 const packages = [
-{
-  name: "১ মাসের প্যাক",
-  subtitle: "ট্রায়াল প্যাক",
-  quantity: "১টি (১৫০ গ্রাম)",
-  price: "৫৯৯",
-  originalPrice: "৭৯৯",
-  savings: "২০০",
-  popular: false
-},
-{
-  name: "৩ মাসের প্যাক",
-  subtitle: "সবচেয়ে জনপ্রিয়",
-  quantity: "৩টি (৪৫০ গ্রাম)",
-  price: "১,৪৯৯",
-  originalPrice: "২,৩৯৭",
-  savings: "৮৯৮",
-  popular: true
-},
-{
-  name: "৬ মাসের প্যাক",
-  subtitle: "সর্বোচ্চ সাশ্রয়",
-  quantity: "৬টি (৯০০ গ্রাম)",
-  price: "২,৪৯৯",
-  originalPrice: "৪,৭৯৪",
-  savings: "২,২৯৫",
-  popular: false
-}];
+  {
+    id: "250g",
+    name: "২৫০ গ্রাম Jar",
+    price: "৮৫০",
+    priceNum: 850,
+    originalPrice: "",
+    originalNum: 0,
+    savings: "",
+    badge: "",
+    badgeColor: "",
+  },
+  {
+    id: "500g",
+    name: "৫০০ গ্রাম Jar",
+    price: "১,৪৫০",
+    priceNum: 1450,
+    originalPrice: "",
+    originalNum: 0,
+    savings: "",
+    badge: "জনপ্রিয়",
+    badgeColor: "bg-trust text-trust-foreground",
+  },
+  {
+    id: "combo",
+    name: "২x৫০০ গ্রাম Combo",
+    price: "২,৬০০",
+    priceNum: 2600,
+    originalPrice: "",
+    originalNum: 0,
+    savings: "",
+    badge: "সেরা দাম",
+    badgeColor: "bg-primary text-primary-foreground",
+  },
+];
 
+const bundles = [
+  {
+    name: "২৫০ গ্রাম Jar",
+    price: "৮৫০",
+    originalPrice: "",
+    savings: "",
+    highlighted: false,
+    badge: "",
+  },
+  {
+    name: "২x৫০০ গ্রাম Jar",
+    price: "১,৬০০",
+    originalPrice: "৳২,৪০০",
+    savings: "৳৮০০ বাঁচান",
+    highlighted: true,
+    badge: "সেরা দাম",
+  },
+  {
+    name: "৪x৫০০ গ্রাম Jar",
+    price: "২,৯০০",
+    originalPrice: "৳৪,৮০০",
+    savings: "৳১,৯০০ বাঁচান",
+    highlighted: false,
+    badge: "",
+  },
+];
 
 const PricingSection = () => {
+  const [selected, setSelected] = useState("500g");
+
   const scrollToCheckout = () => {
     document.getElementById("checkout")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const selectedPkg = packages.find((p) => p.id === selected)!;
+
+  // Dynamic pricing display based on selection
+  const priceMap: Record<string, { regular: string; offer: string; savings: string; percent: string }> = {
+    "250g": { regular: "৳১,২০০", offer: "৳৮৫০", savings: "৳৩৫০", percent: "২৯%" },
+    "500g": { regular: "৳২,১০০", offer: "৳১,৪৫০", savings: "৳৬৫০", percent: "৩১%" },
+    combo: { regular: "৳৪,২০০", offer: "৳২,৬০০", savings: "৳১,৬০০", percent: "৩৮%" },
+  };
+
+  const currentPrice = priceMap[selected];
+
   return (
-    <section className="section-padding bg-card">
-      <div className="container mx-auto max-w-5xl">
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="font-bangla text-3xl md:text-4xl font-bold text-foreground mb-4">
-            আপনার জন্য সেরা প্যাকেজ বেছে নিন
+    <section className="bg-background">
+      {/* Urgency Banner */}
+      <div className="bg-primary rounded-b-xl md:rounded-b-2xl py-4 px-6 text-center mx-auto max-w-[1200px]">
+        <p className="font-bangla text-primary-foreground text-base md:text-lg font-bold flex items-center justify-center gap-2">
+          <Zap className="h-5 w-5 fill-current" />
+          মাত্র ২৪ ঘন্টার মধ্যে Order করুন — Stock সীমিত!
+          <Zap className="h-5 w-5 fill-current" />
+        </p>
+      </div>
+
+      <div className="mx-auto max-w-[1200px] py-16 md:py-[100px] px-6 md:px-[60px]">
+        {/* Headline */}
+        <div className="text-center mb-12 md:mb-[50px]">
+          <h2 className="font-bangla text-[30px] md:text-[44px] font-bold text-primary mb-4 leading-tight">
+            বিশেষ Offer — সীমিত সময়ের জন্য
           </h2>
-          <p className="font-bangla text-lg text-muted-foreground">
-            বেশি নিলে বেশি সাশ্রয় — ক্যাশ অন ডেলিভারি
+          <p className="text-base md:text-lg text-muted-foreground">
+            এখনই Order করুন এবং বাঁচান
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {packages.map((pkg, i) =>
-          <div
-            key={i}
-            className={`relative bg-background rounded-2xl p-8 shadow-soft hover:shadow-lifted transition-all duration-300 flex flex-col ${
-            pkg.popular ? "ring-2 ring-primary scale-[1.02]" : ""}`
-            }>
+        {/* Main Pricing Card */}
+        <div className="relative mx-auto max-w-[500px] bg-card rounded-[20px] border-[3px] border-primary p-8 md:p-10 shadow-[0_12px_40px_rgba(169,29,58,0.15)] mb-16 md:mb-[60px]">
+          {/* Popular Badge */}
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground font-bangla text-sm font-bold px-6 py-2 rounded-full shadow-cta whitespace-nowrap">
+            সবচেয়ে জনপ্রিয়
+          </div>
 
-              {pkg.popular &&
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground font-bangla text-sm font-semibold px-4 py-1 rounded-full">
-                  সবচেয়ে জনপ্রিয়
+          {/* Package Selector */}
+          <h3 className="font-bangla text-xl font-semibold text-foreground mb-6 mt-2 text-center">
+            আপনার Package নির্বাচন করুন
+          </h3>
+
+          <div className="space-y-3 mb-8">
+            {packages.map((pkg) => (
+              <button
+                key={pkg.id}
+                onClick={() => setSelected(pkg.id)}
+                className={`w-full flex items-center gap-4 p-5 rounded-xl border-2 transition-all duration-200 cursor-pointer text-left ${
+                  selected === pkg.id
+                    ? "border-primary bg-primary/5"
+                    : "border-transparent bg-card hover:border-primary/20 hover:bg-primary/[0.03]"
+                }`}
+              >
+                {/* Radio indicator */}
+                <div
+                  className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
+                    selected === pkg.id ? "border-primary bg-primary" : "border-muted-foreground/40"
+                  }`}
+                >
+                  {selected === pkg.id && (
+                    <CheckCircle className="h-3.5 w-3.5 text-primary-foreground" />
+                  )}
                 </div>
-            }
 
-              <div className="text-center mb-6">
-                <h3 className="font-bangla text-xl font-bold text-foreground mb-1">
-                  {pkg.name}
-                </h3>
-                <p className="font-bangla text-sm text-muted-foreground">{pkg.quantity}</p>
+                {/* Content */}
+                <div className="flex-1 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bangla text-lg font-semibold text-foreground">
+                      {pkg.name}
+                    </span>
+                    {pkg.badge && (
+                      <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${pkg.badgeColor}`}>
+                        {pkg.badge}
+                      </span>
+                    )}
+                  </div>
+                  <span className="font-bangla text-lg font-bold text-primary">৳{pkg.price}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-border my-8" />
+
+          {/* Price Display */}
+          <div className="text-center">
+            <p className="text-muted-foreground text-base line-through mb-2">
+              নিয়মিত মূল্য: {currentPrice.regular}
+            </p>
+            <p className="font-bangla text-[40px] md:text-[50px] font-bold text-primary leading-none mb-3">
+              {currentPrice.offer}
+            </p>
+            <span className="inline-block bg-trust/10 text-trust font-bangla text-base md:text-lg font-bold px-6 py-2.5 rounded-full shadow-[0_2px_8px_rgba(45,80,22,0.15)]">
+              বাঁচুন {currentPrice.savings} ({currentPrice.percent})
+            </span>
+          </div>
+
+          {/* CTA Button */}
+          <Button
+            variant="cta"
+            size="cta"
+            className="w-full mt-8 font-bangla text-lg h-[60px] md:h-[60px]"
+            onClick={scrollToCheckout}
+          >
+            এখনই Order করুন
+          </Button>
+        </div>
+
+        {/* Bundle Section */}
+        <div className="text-center mb-10">
+          <h3 className="font-bangla text-[28px] md:text-[34px] font-bold text-foreground">
+            বেশি কিনুন, বেশি বাঁচান
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[900px] mx-auto">
+          {bundles.map((bundle, i) => (
+            <div
+              key={i}
+              className={`relative rounded-2xl p-7 md:p-8 text-center flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lifted ${
+                bundle.highlighted
+                  ? "bg-card border-[3px] border-primary shadow-[0_8px_24px_rgba(169,29,58,0.2)] md:scale-105"
+                  : "bg-card border border-border shadow-soft"
+              }`}
+            >
+              {/* Badge */}
+              {bundle.badge && (
+                <div className="absolute -top-3 right-4 bg-primary text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full">
+                  {bundle.badge}
+                </div>
+              )}
+
+              {/* Product Name */}
+              <h4 className="font-bangla text-xl md:text-2xl font-bold text-foreground mb-4 mt-1">
+                {bundle.name}
+              </h4>
+
+              {/* Original Price */}
+              {bundle.originalPrice && (
+                <p className="text-muted-foreground text-base line-through mb-2">
+                  {bundle.originalPrice}
+                </p>
+              )}
+
+              {/* Offer Price */}
+              <p className="font-bangla text-[34px] md:text-[38px] font-bold text-primary mb-3 leading-none">
+                ৳{bundle.price}
+              </p>
+
+              {/* Savings */}
+              {bundle.savings && (
+                <span className="inline-block bg-trust/10 text-trust font-bangla text-sm font-semibold px-4 py-1.5 rounded-full mb-5">
+                  {bundle.savings}
+                </span>
+              )}
+
+              {/* Select Button */}
+              <div className="mt-auto pt-4">
+                <Button
+                  variant="outline"
+                  className="w-full font-bangla border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl h-12 text-base transition-all duration-200"
+                  onClick={scrollToCheckout}
+                >
+                  এটি নির্বাচন করুন
+                </Button>
               </div>
-
-              <div className="text-center mb-6">
-                <div className="flex items-baseline justify-center gap-2">
-                  <span className="font-bangla text-4xl font-bold text-primary">৳{pkg.price}</span>
-                </div>
-                <div className="flex items-center justify-center gap-2 mt-2">
-                  <span className="font-bangla text-sm text-muted-foreground line-through">
-                    ৳{pkg.originalPrice}
-                  </span>
-                  <span className="font-bangla text-sm font-semibold text-trust bg-trust-light px-2 py-0.5 rounded-full">
-                    ৳{pkg.savings} সাশ্রয়
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-3 mb-8 flex-1">
-                <div className="flex items-center gap-2 text-sm text-foreground">
-                  <CheckCircle className="h-4 w-4 text-trust flex-shrink-0" />
-                  <span className="font-bangla font-bold">১০০% অর্গানিক বিটরুট</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-foreground">
-                  <Truck className="h-4 w-4 text-trust flex-shrink-0" />
-                  <span className="font-bangla">ফ্রি ডেলিভারি</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-foreground">
-                  <Gift className="h-4 w-4 text-trust flex-shrink-0" />
-                  <span className="font-bangla">রেসিপি গাইড ফ্রি</span>
-                </div>
-              </div>
-
-              <Button
-              variant="cta"
-              size="cta-sm"
-              className="w-full font-bangla"
-              onClick={scrollToCheckout}>
-
-                এখনই অর্ডার করুন
-              </Button>
             </div>
-          )}
+          ))}
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 };
 
 export default PricingSection;
