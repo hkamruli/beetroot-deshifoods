@@ -3,55 +3,55 @@ import type { LucideIcon } from "lucide-react";
 import heroImage from "@/assets/beetroot-hero.jpg";
 
 const benefits = [
-  {
-    icon: Leaf,
-    titleBn: "১০০% অর্গানিক ও প্রাকৃতিক",
-    titleEn: "100% Organic & Natural",
-    descBn: "কোনো কৃত্রিম সংযোজন বা সংরক্ষক নেই",
-    descEn: "No artificial additives or preservatives",
-  },
-  {
-    icon: Heart,
-    titleBn: "সহজে হজম হয়",
-    titleEn: "Easy to Digest",
-    descBn: "বয়স্কদের এবং সংবেদনশীল পেটের জন্য উপযুক্ত",
-    descEn: "Perfect for elderly users and sensitive stomachs",
-  },
-  {
-    icon: Activity,
-    titleBn: "নাইট্রেটে সমৃদ্ধ",
-    titleEn: "Rich in Nitrates",
-    descBn: "প্রাকৃতিকভাবে রক্তপ্রবাহ ও স্ট্যামিনা উন্নত করে",
-    descEn: "Naturally improves blood flow and stamina",
-  },
-  {
-    icon: Shield,
-    titleBn: "চিনি মুক্ত",
-    titleEn: "No Added Sugar",
-    descBn: "শুধুমাত্র খাঁটি বিটরুটের গুণাগুণ",
-    descEn: "Pure beetroot goodness only",
-  },
-];
+{
+  icon: Leaf,
+  titleBn: "১০০% অর্গানিক ও প্রাকৃতিক",
+  titleEn: "100% Organic & Natural",
+  descBn: "কোনো কৃত্রিম সংযোজন বা সংরক্ষক নেই",
+  descEn: "No artificial additives or preservatives"
+},
+{
+  icon: Heart,
+  titleBn: "সহজে হজম হয়",
+  titleEn: "Easy to Digest",
+  descBn: "বয়স্কদের এবং সংবেদনশীল পেটের জন্য উপযুক্ত",
+  descEn: "Perfect for elderly users and sensitive stomachs"
+},
+{
+  icon: Activity,
+  titleBn: "নাইট্রেটে সমৃদ্ধ",
+  titleEn: "Rich in Nitrates",
+  descBn: "প্রাকৃতিকভাবে রক্তপ্রবাহ ও স্ট্যামিনা উন্নত করে",
+  descEn: "Naturally improves blood flow and stamina"
+},
+{
+  icon: Shield,
+  titleBn: "চিনি মুক্ত",
+  titleEn: "No Added Sugar",
+  descBn: "শুধুমাত্র খাঁটি বিটরুটের গুণাগুণ",
+  descEn: "Pure beetroot goodness only"
+}];
+
 
 const BenefitItem = ({
   icon: Icon,
   titleBn,
   titleEn,
   descBn,
-  descEn,
-}: {
-  icon: LucideIcon;
-  titleBn: string;
-  titleEn: string;
-  descBn: string;
-  descEn: string;
-}) => (
-  <div className="group flex items-start gap-5 p-5 bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:translate-x-2 hover:shadow-soft transition-all duration-250 ease-out">
+  descEn
+
+
+
+
+
+
+}: {icon: LucideIcon;titleBn: string;titleEn: string;descBn: string;descEn: string;}) =>
+<div className="group flex items-start gap-5 p-5 bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:translate-x-2 hover:shadow-soft transition-all duration-250 ease-out">
     <div className="flex-shrink-0 w-[52px] h-[52px] rounded-[10px] bg-trust/10 flex items-center justify-center group-hover:bg-trust/[0.15] transition-colors duration-250">
       <Icon className="h-7 w-7 text-trust" strokeWidth={1.8} />
     </div>
     <div>
-      <h3 className="font-bangla text-lg md:text-xl font-semibold text-foreground mb-0.5">
+      <h3 className="font-bangla text-lg md:text-xl text-foreground mb-0.5 font-bold">
         {titleBn}
       </h3>
       <p className="font-english text-xs text-muted-foreground mb-1.5">{titleEn}</p>
@@ -60,8 +60,8 @@ const BenefitItem = ({
       </p>
       <p className="font-english text-xs text-muted-foreground mt-0.5 italic">{descEn}</p>
     </div>
-  </div>
-);
+  </div>;
+
 
 const SolutionSection = () => {
   return (
@@ -92,8 +92,8 @@ const SolutionSection = () => {
                 src={heroImage}
                 alt="অর্গানিক বিটরুট পাউডার পণ্য - Organic Beetroot Powder Product"
                 className="w-full max-w-md rounded-[20px] shadow-[0_12px_40px_rgba(0,0,0,0.12)]"
-                loading="lazy"
-              />
+                loading="lazy" />
+
 
               {/* Certified Organic Badge */}
               <div className="absolute top-2 right-2 w-20 h-20 rounded-full bg-trust text-trust-foreground flex flex-col items-center justify-center border-4 border-white shadow-soft">
@@ -120,9 +120,9 @@ const SolutionSection = () => {
             </div>
 
             <div className="space-y-5">
-              {benefits.map((benefit, i) => (
-                <BenefitItem key={i} {...benefit} />
-              ))}
+              {benefits.map((benefit, i) =>
+              <BenefitItem key={i} {...benefit} />
+              )}
             </div>
           </div>
         </div>
@@ -138,8 +138,8 @@ const SolutionSection = () => {
           <div className="w-16 h-0.5 bg-primary/30 mx-auto mt-3 rounded-full" />
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 };
 
 export default SolutionSection;

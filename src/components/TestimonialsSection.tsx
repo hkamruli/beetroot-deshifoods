@@ -1,31 +1,31 @@
 import { Star, BadgeCheck } from "lucide-react";
 
 const testimonials = [
-  {
-    name: "রাহুল আহমেদ",
-    age: "৩২",
-    location: "ঢাকা",
-    text: "জিমে পারফরম্যান্স অনেক ভালো হয়েছে। আগে ৩০ মিনিট পরেই হাঁপিয়ে যেতাম, এখন ১ ঘণ্টা ওয়ার্কআউট করতে পারি!",
-    rating: 5,
-    tag: "স্ট্যামিনা বৃদ্ধি",
-  },
-  {
-    name: "ফাতেমা বেগম",
-    age: "৫৮",
-    location: "চট্টগ্রাম",
-    text: "ডাক্তার বলেছিলেন রক্তচাপ কমাতে প্রাকৃতিক উপায় চেষ্টা করতে। ৩ মাস ধরে খাচ্ছি, রক্তচাপ অনেক স্থিতিশীল।",
-    rating: 5,
-    tag: "রক্তচাপ নিয়ন্ত্রণ",
-  },
-  {
-    name: "তানভীর হাসান",
-    age: "২৮",
-    location: "সিলেট",
-    text: "অফিসে সারাদিন ক্লান্তি লাগতো। বিটরুট পাউডার খাওয়া শুরু করার পর এনার্জি লেভেল অনেক ভালো।",
-    rating: 5,
-    tag: "এনার্জি বুস্ট",
-  },
-];
+{
+  name: "রাহুল আহমেদ",
+  age: "৩২",
+  location: "ঢাকা",
+  text: "জিমে পারফরম্যান্স অনেক ভালো হয়েছে। আগে ৩০ মিনিট পরেই হাঁপিয়ে যেতাম, এখন ১ ঘণ্টা ওয়ার্কআউট করতে পারি!",
+  rating: 5,
+  tag: "স্ট্যামিনা বৃদ্ধি"
+},
+{
+  name: "ফাতেমা বেগম",
+  age: "৫৮",
+  location: "চট্টগ্রাম",
+  text: "ডাক্তার বলেছিলেন রক্তচাপ কমাতে প্রাকৃতিক উপায় চেষ্টা করতে। ৩ মাস ধরে খাচ্ছি, রক্তচাপ অনেক স্থিতিশীল।",
+  rating: 5,
+  tag: "রক্তচাপ নিয়ন্ত্রণ"
+},
+{
+  name: "তানভীর হাসান",
+  age: "২৮",
+  location: "সিলেট",
+  text: "অফিসে সারাদিন ক্লান্তি লাগতো। বিটরুট পাউডার খাওয়া শুরু করার পর এনার্জি লেভেল অনেক ভালো।",
+  rating: 5,
+  tag: "এনার্জি বুস্ট"
+}];
+
 
 const TestimonialsSection = () => {
   return (
@@ -41,18 +41,18 @@ const TestimonialsSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {testimonials.map((t, i) => (
-            <div
-              key={i}
-              className="bg-card rounded-2xl p-8 shadow-soft hover:shadow-lifted transition-all duration-300 flex flex-col"
-            >
+          {testimonials.map((t, i) =>
+          <div
+            key={i}
+            className="bg-card rounded-2xl p-8 shadow-soft hover:shadow-lifted transition-all duration-300 flex flex-col">
+
               <div className="flex items-center gap-1 mb-4">
-                {Array.from({ length: t.rating }).map((_, j) => (
-                  <Star key={j} className="h-5 w-5 fill-accent text-accent" />
-                ))}
+                {Array.from({ length: t.rating }).map((_, j) =>
+              <Star key={j} className="h-5 w-5 fill-accent text-accent" />
+              )}
               </div>
 
-              <p className="font-bangla text-base text-foreground leading-relaxed mb-6 flex-1">
+              <p className="font-bangla text-base text-foreground leading-relaxed mb-6 flex-1 font-bold">
                 "{t.text}"
               </p>
 
@@ -75,11 +75,11 @@ const TestimonialsSection = () => {
                 </span>
               </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 };
 
 export default TestimonialsSection;

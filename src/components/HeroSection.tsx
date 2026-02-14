@@ -11,7 +11,7 @@ const HeroSection = () => {
     <section className="relative min-h-screen overflow-hidden bg-background">
       {/* Subtle organic texture overlay */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23888' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23888' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
       }} />
       
       {/* Faint leaf pattern top-right */}
@@ -32,7 +32,7 @@ const HeroSection = () => {
             {/* Organic badge */}
             <div className="inline-flex items-center gap-2 rounded-full bg-trust-light border border-trust/15 px-4 py-2.5 text-sm font-medium text-trust">
               <Leaf className="h-4 w-4" />
-              <span className="font-bangla">১০০% অর্গানিক ও প্রাকৃতিক</span>
+              <span className="font-bangla font-bold">১০০% অর্গানিক ও প্রাকৃতিক</span>
             </div>
 
             {/* Main Headline - Bangla */}
@@ -47,7 +47,7 @@ const HeroSection = () => {
 
             {/* Sub-headline */}
             <div className="space-y-1.5">
-              <p className="font-bangla text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
+              <p className="font-bangla text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-bold">
                 ১০০% খাঁটি অর্গানিক বিটরুট পাউডার
               </p>
               <p className="font-bangla text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
@@ -63,8 +63,8 @@ const HeroSection = () => {
               <Button
                 variant="cta"
                 onClick={scrollToCheckout}
-                className="font-bangla w-full sm:w-auto min-w-[280px] h-14 lg:h-[60px] px-14 text-lg rounded-xl"
-              >
+                className="font-bangla w-full sm:w-auto min-w-[280px] h-14 lg:h-[60px] px-14 text-lg rounded-xl">
+
                 অর্ডার করুন — ১০০% ঝুঁকিমুক্ত
               </Button>
               <p className="font-english text-xs text-muted-foreground mt-2.5 tracking-wide">
@@ -86,33 +86,33 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 };
 
-const TrustBadge = ({ icon, bangla, english }: { icon: React.ReactNode; bangla: string; english: string }) => (
-  <div className="inline-flex items-center gap-2.5 rounded-full bg-trust/[0.06] border border-trust/15 px-[18px] py-2.5">
+const TrustBadge = ({ icon, bangla, english }: {icon: React.ReactNode;bangla: string;english: string;}) =>
+<div className="inline-flex items-center gap-2.5 rounded-full bg-trust/[0.06] border border-trust/15 px-[18px] py-2.5">
     {icon}
     <div className="flex flex-col">
-      <span className="font-bangla text-sm font-medium text-foreground leading-tight">{bangla}</span>
+      <span className="font-bangla text-sm text-foreground leading-tight font-bold">{bangla}</span>
       <span className="font-english text-[11px] text-muted-foreground leading-tight">{english}</span>
     </div>
-  </div>
-);
+  </div>;
 
-const HeroVisual = () => (
-  <div className="relative p-10">
+
+const HeroVisual = () =>
+<div className="relative p-10">
     {/* Glow behind image */}
     <div className="absolute inset-8 rounded-full bg-primary/[0.06] blur-3xl" />
     
     {/* Product image */}
     <img
-      src={heroImage}
-      alt="অর্গানিক বিটরুট পাউডার - Organic Beetroot Powder"
-      className="relative w-72 md:w-80 lg:w-[26rem] rounded-2xl shadow-lifted animate-float"
-      loading="eager"
-      fetchPriority="high"
-    />
+    src={heroImage}
+    alt="অর্গানিক বিটরুট পাউডার - Organic Beetroot Powder"
+    className="relative w-72 md:w-80 lg:w-[26rem] rounded-2xl shadow-lifted animate-float"
+    loading="eager"
+    fetchPriority="high" />
+
 
     {/* Certified Organic badge overlay */}
     <div className="absolute top-6 right-6 w-[60px] h-[60px] rounded-full bg-trust text-trust-foreground flex flex-col items-center justify-center border-[3px] border-white shadow-soft text-center">
@@ -120,7 +120,7 @@ const HeroVisual = () => (
       <span className="text-[7px] font-bold leading-none font-english">CERTIFIED</span>
       <span className="text-[7px] font-bold leading-none font-english">ORGANIC</span>
     </div>
-  </div>
-);
+  </div>;
+
 
 export default HeroSection;
