@@ -45,9 +45,10 @@ const Dashboard = () => {
     const { data: orders } = await supabase.from("orders").select("*");
     if (!orders) return;
 
-    const totalRevenue = orders.reduce((s, o) => s + (o.total || 0), 0);
-    const totalDiscounts = orders.reduce((s, o) => s + (o.discount || 0), 0);
-    const totalFreeDelivery = orders.length * 80; // ৳80 saved per order
+    const activeOrders = orders.filter(o => o.status !== "cancelled");
+    const totalRevenue = activeOrders.reduce((s, o) => s + (o.total || 0), 0);
+    const totalDiscounts = activeOrders.reduce((s, o) => s + (o.discount || 0), 0);
+    const totalFreeDelivery = activeOrders.length * 80; // ৳80 saved per order
     const pending = orders.filter(o => o.status === "pending").length;
     const confirmed = orders.filter(o => o.status === "confirmed").length;
     const shipped = orders.filter(o => o.status === "shipped").length;
