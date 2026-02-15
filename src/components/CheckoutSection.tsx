@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const VARIATIONS = [
   { id: "250g", name: "২৫০ গ্রাম Jar", unitPrice: 850, badge: null, badgeColor: "" },
@@ -23,6 +24,15 @@ interface FieldError {
   email?: string;
   address?: string;
 }
+
+const getSessionId = () => {
+  let sid = localStorage.getItem("checkout_session_id");
+  if (!sid) {
+    sid = crypto.randomUUID();
+    localStorage.setItem("checkout_session_id", sid);
+  }
+  return sid;
+};
 
 const CheckoutSection = () => {
   const { toast } = useToast();
@@ -40,11 +50,53 @@ const CheckoutSection = () => {
   const [submitting, setSubmitting] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
 
+  const sessionId = useRef(getSessionId());
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const savedOnce = useRef(false);
+
   const variation = VARIATIONS.find(v => v.id === selectedVariation)!;
   const subtotal = variation.unitPrice * quantity;
   const discountPct = quantity >= 5 ? 8 : quantity >= 3 ? 5 : 0;
   const discount = Math.round(subtotal * discountPct / 100);
   const total = subtotal - discount;
+
+  // Auto-save uncompleted order
+  useEffect(() => {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    
+    // Only auto-save if user has started filling
+    const hasData = name.trim() || phone.trim() || email.trim() || address.trim();
+    if (!hasData) return;
+
+    autoSaveTimer.current = setTimeout(async () => {
+      const payload = {
+        customer_name: name.trim() || null,
+        customer_phone: phone.trim() || null,
+        customer_email: email.trim() || null,
+        customer_address: address.trim() || null,
+        product_name: "অর্গানিক বিটরুট পাউডার",
+        variation: variation.name,
+        quantity,
+        unit_price: variation.unitPrice,
+        total,
+        session_id: sessionId.current,
+      };
+
+      if (!savedOnce.current) {
+        await supabase.from("uncompleted_orders").insert(payload);
+        savedOnce.current = true;
+      } else {
+        await supabase
+          .from("uncompleted_orders")
+          .update(payload)
+          .eq("session_id", sessionId.current);
+      }
+    }, 2000);
+
+    return () => {
+      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    };
+  }, [name, phone, email, address, selectedVariation, quantity, total, variation]);
 
   const validate = useCallback((): FieldError => {
     const e: FieldError = {};
@@ -97,10 +149,41 @@ const CheckoutSection = () => {
     setSubmitting(true);
     setShowFormError(false);
 
-    // Simulate order submission
-    await new Promise(r => setTimeout(r, 1800));
-
     const orderNumber = `ORD-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    // Save order to database
+    const { error: orderError } = await supabase.from("orders").insert({
+      order_number: orderNumber,
+      customer_name: name.trim(),
+      customer_phone: phone.trim(),
+      customer_email: email.trim(),
+      customer_address: address.trim(),
+      product_name: "অর্গানিক বিটরুট পাউডার",
+      variation: variation.name,
+      quantity,
+      unit_price: variation.unitPrice,
+      subtotal,
+      discount,
+      discount_pct: discountPct,
+      total,
+      status: "pending",
+      payment_method: "cod",
+    });
+
+    if (orderError) {
+      toast({ title: "Order ব্যর্থ হয়েছে", description: "আবার চেষ্টা করুন", variant: "destructive" });
+      setSubmitting(false);
+      return;
+    }
+
+    // Mark uncompleted order as converted
+    await supabase
+      .from("uncompleted_orders")
+      .update({ converted: true })
+      .eq("session_id", sessionId.current);
+
+    // Reset session for next order
+    localStorage.removeItem("checkout_session_id");
 
     toast({
       title: "Order সফল হয়েছে! 🎉",
@@ -151,7 +234,6 @@ const CheckoutSection = () => {
   // Order summary component
   const OrderSummary = () => (
     <div className="space-y-5">
-      {/* Product Row */}
       <div className="bg-white rounded-xl p-4 shadow-soft border border-border/50 transition-all duration-300">
         <div className="flex justify-between items-start">
           <div>
@@ -167,7 +249,6 @@ const CheckoutSection = () => {
         </div>
       </div>
 
-      {/* Breakdown */}
       <div className="border-t border-border/60 pt-5 space-y-3.5">
         <div className="flex justify-between items-center">
           <span className="font-body text-[15px] text-muted-foreground">মোট মূল্য:</span>
@@ -188,7 +269,6 @@ const CheckoutSection = () => {
         )}
       </div>
 
-      {/* Total */}
       <div className="border-t-2 border-primary/30 pt-5">
         <div className="flex justify-between items-baseline">
           <span className="font-bangla font-bold text-xl text-foreground">মোট:</span>
@@ -202,7 +282,6 @@ const CheckoutSection = () => {
         )}
       </div>
 
-      {/* Payment Method */}
       <div className="bg-trust/[0.06] border border-trust/20 rounded-[10px] p-3.5 mt-4">
         <div className="flex items-center gap-2.5">
           <Wallet className="h-5 w-5 text-trust" />
@@ -290,12 +369,10 @@ const CheckoutSection = () => {
                           : "border-transparent bg-secondary hover:border-primary/25 hover:bg-primary/[0.04]"
                         }`}
                     >
-                      {/* Radio */}
                       <div className={`flex-shrink-0 w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center transition-all
                         ${selectedVariation === v.id ? "border-primary bg-primary" : "border-muted-foreground/40"}`}>
                         {selectedVariation === v.id && <Check className="h-3.5 w-3.5 text-primary-foreground" />}
                       </div>
-                      {/* Info */}
                       <div className="flex-1 min-w-0">
                         {v.badge && (
                           <span className={`inline-block text-[11px] font-bangla font-semibold px-2.5 py-0.5 rounded-full mb-1.5
@@ -306,7 +383,6 @@ const CheckoutSection = () => {
                         <p className="font-bangla font-semibold text-[17px] text-foreground">{v.name}</p>
                         <p className="font-bangla font-bold text-lg text-primary mt-1">{formatPrice(v.unitPrice)}/টি</p>
                       </div>
-                      {/* Quantity Selector */}
                       {selectedVariation === v.id && (
                         <div className="flex items-center bg-secondary border border-border rounded-lg p-1.5 gap-1" onClick={e => e.stopPropagation()}>
                           <button
