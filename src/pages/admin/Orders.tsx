@@ -94,94 +94,165 @@ const Orders = () => {
   const generateInvoicePDF = (order: Order): jsPDF => {
     const doc = new jsPDF();
     const w = doc.internal.pageSize.getWidth();
+    const h = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    const rightCol = w - margin;
 
-    // Header
+    // --- Header Banner ---
     doc.setFillColor(169, 29, 58);
-    doc.rect(0, 0, w, 40, "F");
-    doc.setTextColor(255);
-    doc.setFontSize(22);
-    doc.text("INVOICE", 20, 25);
-    doc.setFontSize(10);
-    doc.text("Deshi Foods", w - 20, 15, { align: "right" });
-    doc.text("Organic Beetroot Powder", w - 20, 22, { align: "right" });
-    doc.text("+880 1712 345 678", w - 20, 29, { align: "right" });
+    doc.rect(0, 0, w, 48, "F");
+    // Accent line
+    doc.setFillColor(220, 80, 110);
+    doc.rect(0, 48, w, 3, "F");
 
-    // Order Info
-    doc.setTextColor(50);
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(28);
+    doc.setFont("helvetica", "bold");
+    doc.text("INVOICE", margin, 30);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Deshi Foods", rightCol, 18, { align: "right" });
+    doc.text("Premium Organic Products", rightCol, 25, { align: "right" });
+    doc.text("www.deshifoods.com", rightCol, 32, { align: "right" });
+    doc.text("+880 1712 345 678", rightCol, 39, { align: "right" });
+
+    // --- Order & Date Row ---
+    let y = 62;
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+    doc.setFont("helvetica", "normal");
+    doc.text("Invoice No:", margin, y);
+    doc.text("Date:", rightCol - 40, y);
+    y += 6;
+    doc.setTextColor(30);
+    doc.setFont("helvetica", "bold");
+    doc.text(order.order_number, margin, y);
+    doc.text(new Date(order.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }), rightCol - 40, y);
+
+    // --- Bill To Section ---
+    y += 14;
+    doc.setFillColor(248, 248, 248);
+    doc.roundedRect(margin, y - 5, w - margin * 2, 38, 3, 3, "F");
+    doc.setFontSize(9);
+    doc.setTextColor(140);
+    doc.setFont("helvetica", "bold");
+    doc.text("BILL TO", margin + 8, y + 2);
+    y += 9;
+    doc.setTextColor(30);
     doc.setFontSize(11);
-    let y = 55;
-    doc.text(`Order: ${order.order_number}`, 20, y);
-    doc.text(`Date: ${new Date(order.created_at).toLocaleDateString("en-GB")}`, w - 20, y, { align: "right" });
-
-    y += 15;
-    doc.setFontSize(12);
-    doc.setTextColor(100);
-    doc.text("Bill To:", 20, y);
-    y += 8;
-    doc.setTextColor(30);
-    doc.text(order.customer_name, 20, y); y += 6;
-    doc.text(order.customer_phone, 20, y); y += 6;
-    doc.text(order.customer_email, 20, y); y += 6;
+    doc.setFont("helvetica", "bold");
+    doc.text(order.customer_name, margin + 8, y);
+    y += 6;
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
-    const addrLines = doc.splitTextToSize(order.customer_address, w - 40);
-    doc.text(addrLines, 20, y); y += addrLines.length * 5 + 10;
+    doc.setTextColor(80);
+    doc.text(order.customer_phone + "  |  " + order.customer_email, margin + 8, y);
+    y += 6;
+    const addrLines = doc.splitTextToSize(order.customer_address, w - margin * 2 - 16);
+    doc.text(addrLines, margin + 8, y);
+    y += addrLines.length * 4 + 12;
 
-    // Table Header
-    doc.setFillColor(245, 245, 245);
-    doc.rect(15, y, w - 30, 10, "F");
+    // --- Items Table ---
+    // Table header
+    const colItem = margin;
+    const colVariation = 90;
+    const colQty = 120;
+    const colPrice = 145;
+    const colTotal = rightCol;
+
+    doc.setFillColor(169, 29, 58);
+    doc.roundedRect(margin, y, w - margin * 2, 10, 2, 2, "F");
+    doc.setTextColor(255);
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "bold");
+    doc.text("PRODUCT", colItem + 6, y + 7);
+    doc.text("VARIATION", colVariation, y + 7);
+    doc.text("QTY", colQty, y + 7);
+    doc.text("UNIT PRICE", colPrice, y + 7);
+    doc.text("TOTAL", colTotal - 4, y + 7, { align: "right" });
+    y += 14;
+
+    // Table row
+    doc.setTextColor(30);
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.text("Item", 20, y + 7);
-    doc.text("Qty", 100, y + 7);
-    doc.text("Price", 130, y + 7);
-    doc.text("Total", w - 25, y + 7, { align: "right" });
-    y += 15;
-
-    // Item
-    doc.setTextColor(30);
-    doc.text(`${order.product_name} (${order.variation})`, 20, y);
-    doc.text(order.quantity.toString(), 100, y);
-    doc.text(`Tk ${order.unit_price}`, 130, y);
-    doc.text(`Tk ${order.subtotal}`, w - 25, y, { align: "right" });
-    y += 15;
-
-    // Totals
-    doc.setDrawColor(220);
-    doc.line(15, y, w - 15, y);
-    y += 8;
-    doc.text("Subtotal:", 120, y);
-    doc.text(`Tk ${order.subtotal}`, w - 25, y, { align: "right" });
-    y += 7;
-    doc.text("Delivery:", 120, y);
-    doc.setTextColor(45, 80, 22);
-    doc.text("FREE", w - 25, y, { align: "right" });
-    y += 7;
-    if (order.discount > 0) {
-      doc.setTextColor(45, 80, 22);
-      doc.text(`Discount (${order.discount_pct}%):`, 120, y);
-      doc.text(`-Tk ${order.discount}`, w - 25, y, { align: "right" });
-      y += 7;
-    }
-    doc.setTextColor(30);
-    doc.setFontSize(14);
-    doc.line(115, y, w - 15, y);
-    y += 10;
-    doc.text("Total:", 120, y);
-    doc.setTextColor(169, 29, 58);
-    doc.text(`Tk ${order.total}`, w - 25, y, { align: "right" });
-
-    y += 15;
-    doc.setTextColor(100);
+    doc.text(order.product_name, colItem + 6, y);
     doc.setFontSize(9);
-    doc.text("Payment: Cash on Delivery", 20, y);
-    y += 5;
-    doc.text(`Status: ${order.status.toUpperCase()}`, 20, y);
+    doc.setTextColor(80);
+    doc.text(order.variation, colVariation, y);
+    doc.setTextColor(30);
+    doc.text(String(order.quantity), colQty + 4, y);
+    doc.text("Tk " + order.unit_price.toLocaleString("en-IN"), colPrice, y);
+    doc.setFont("helvetica", "bold");
+    doc.text("Tk " + order.subtotal.toLocaleString("en-IN"), colTotal - 4, y, { align: "right" });
+    y += 12;
 
-    // Footer
-    const fY = doc.internal.pageSize.getHeight() - 15;
+    // Separator
+    doc.setDrawColor(230);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, rightCol, y);
+    y += 10;
+
+    // --- Totals ---
+    const totalsX = 130;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(80);
+    doc.text("Subtotal", totalsX, y);
+    doc.setTextColor(30);
+    doc.text("Tk " + order.subtotal.toLocaleString("en-IN"), rightCol - 4, y, { align: "right" });
+    y += 8;
+
+    doc.setTextColor(80);
+    doc.text("Delivery", totalsX, y);
+    doc.setTextColor(34, 120, 60);
+    doc.setFont("helvetica", "bold");
+    doc.text("FREE", rightCol - 4, y, { align: "right" });
+    y += 8;
+
+    if (order.discount > 0) {
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(80);
+      doc.text("Discount (" + order.discount_pct + "%)", totalsX, y);
+      doc.setTextColor(34, 120, 60);
+      doc.text("-Tk " + order.discount.toLocaleString("en-IN"), rightCol - 4, y, { align: "right" });
+      y += 8;
+    }
+
+    // Grand total
+    y += 2;
+    doc.setFillColor(248, 248, 248);
+    doc.roundedRect(totalsX - 5, y - 5, rightCol - totalsX + 9, 14, 2, 2, "F");
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(30);
+    doc.text("TOTAL", totalsX, y + 5);
+    doc.setTextColor(169, 29, 58);
+    doc.text("Tk " + order.total.toLocaleString("en-IN"), rightCol - 4, y + 5, { align: "right" });
+
+    // --- Payment & Status ---
+    y += 22;
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(120);
+    doc.text("Payment Method: Cash on Delivery", margin, y);
+    y += 6;
+    doc.text("Order Status: " + order.status.charAt(0).toUpperCase() + order.status.slice(1), margin, y);
+
+    if (order.notes) {
+      y += 10;
+      doc.setTextColor(100);
+      doc.text("Notes: " + order.notes, margin, y);
+    }
+
+    // --- Footer ---
+    doc.setFillColor(248, 248, 248);
+    doc.rect(0, h - 22, w, 22, "F");
+    doc.setFillColor(169, 29, 58);
+    doc.rect(0, h - 22, w, 1, "F");
     doc.setFontSize(8);
-    doc.setTextColor(150);
-    doc.text("Thank you for your order! - Deshi Foods", w / 2, fY, { align: "center" });
+    doc.setTextColor(140);
+    doc.text("Thank you for choosing Deshi Foods! Quality you can trust.", w / 2, h - 10, { align: "center" });
 
     return doc;
   };
