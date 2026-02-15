@@ -57,9 +57,8 @@ const CheckoutSection = () => {
     else if (!cleanPhone.startsWith("01")) e.phone = "নম্বর ০১ দিয়ে শুরু হতে হবে";
     else if (cleanPhone.length !== 11) e.phone = "সঠিক ১১ ডিজিটের নম্বর লিখুন";
 
-    if (email.trim()) {
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) e.email = "সঠিক Email Address লিখুন";
-    }
+    if (!email.trim()) e.email = "ইমেইল প্রয়োজন";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) e.email = "সঠিক ইমেইল লিখুন";
 
     if (!address.trim()) e.address = "Delivery ঠিকানা প্রয়োজন";
     else if (address.trim().length < 20) e.address = "সম্পূর্ণ ঠিকানা লিখুন (কমপক্ষে ২০ অক্ষর)";
@@ -367,7 +366,7 @@ const CheckoutSection = () => {
                 </InputWrapper>
 
                 {/* Email */}
-                <InputWrapper field="email" label="ইমেইল" optional helper="Order নিশ্চিতকরণের জন্য ইমেইল পাবেন">
+                <InputWrapper field="email" label="ইমেইল" required helper="অর্ডার নিশ্চিতকরণের জন্য ইমেইল পাবেন">
                   <input
                     type="email"
                     inputMode="email"
