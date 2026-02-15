@@ -16,7 +16,7 @@ export default {
       fontFamily: {
         bangla: ["Hind Siliguri", "sans-serif"],
         english: ["Inter", "sans-serif"],
-        body: ["Open Sans", "Hind Siliguri", "sans-serif"],
+        body: ["Hind Siliguri", "Open Sans", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
