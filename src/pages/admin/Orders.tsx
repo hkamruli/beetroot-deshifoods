@@ -91,6 +91,21 @@ const Orders = () => {
     else setSelected(new Set(filtered.map(o => o.id)));
   };
 
+  // Helper to convert Bengali text to English for PDF (jsPDF can't render Bengali)
+  const toEnglishForPDF = (text: string): string => {
+    const map: Record<string, string> = {
+      "অর্গানিক বিটরুট পাউডার": "Organic Beetroot Powder",
+      "বিটরুট পাউডার": "Beetroot Powder",
+      "৫০০ গ্রাম Jar": "500g Jar",
+      "২৫০ গ্রাম Jar": "250g Jar",
+      "১ কেজি Jar": "1kg Jar",
+      "৫০০ গ্রাম": "500g",
+      "২৫০ গ্রাম": "250g",
+      "১ কেজি": "1kg",
+    };
+    return map[text] || text.replace(/[^\x00-\x7F]/g, "");
+  };
+
   const generateInvoicePDF = (order: Order): jsPDF => {
     const doc = new jsPDF();
     const w = doc.internal.pageSize.getWidth();
@@ -176,10 +191,10 @@ const Orders = () => {
     doc.setTextColor(30);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text(order.product_name, colItem + 6, y);
+    doc.text(toEnglishForPDF(order.product_name), colItem + 6, y);
     doc.setFontSize(9);
     doc.setTextColor(80);
-    doc.text(order.variation, colVariation, y);
+    doc.text(toEnglishForPDF(order.variation), colVariation, y);
     doc.setTextColor(30);
     doc.text(String(order.quantity), colQty + 4, y);
     doc.text("Tk " + order.unit_price.toLocaleString("en-IN"), colPrice, y);
