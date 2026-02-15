@@ -60,7 +60,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Open Sans', 'Hind Siliguri', sans-serif;
+    font-family: 'Hind Siliguri', 'Open Sans', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
