@@ -110,16 +110,16 @@ const testimonials = [
 
 
 const certifications = [
-{ icon: Leaf, text: "১০০% Organic Certified" },
-{ icon: Moon, text: "Halal Certified" },
+{ icon: Leaf, text: "১০০% অর্গানিক সার্টিফাইড" },
+{ icon: Moon, text: "হালাল সার্টিফাইড" },
 { icon: Shield, text: "BSTI অনুমোদিত" },
-{ icon: Sprout, text: "১০০% Natural" }];
+{ icon: Sprout, text: "১০০% প্রাকৃতিক" }];
 
 
 const guaranteeTrustItems = [
-{ icon: PackageCheck, text: "সিকিউর Packaging" },
-{ icon: Truck, text: "Free Delivery" },
-{ icon: RotateCcw, text: "সহজ Return" }];
+{ icon: PackageCheck, text: "নিরাপদ প্যাকেজিং" },
+{ icon: Truck, text: "ফ্রি ডেলিভারি" },
+{ icon: RotateCcw, text: "সহজ রিটার্ন" }];
 
 
 /* ── Testimonial Card ── */

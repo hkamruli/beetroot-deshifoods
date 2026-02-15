@@ -171,19 +171,19 @@ const CheckoutSection = () => {
       {/* Breakdown */}
       <div className="border-t border-border/60 pt-5 space-y-3.5">
         <div className="flex justify-between items-center">
-          <span className="font-body text-[15px] text-muted-foreground">Subtotal:</span>
+          <span className="font-body text-[15px] text-muted-foreground">মোট মূল্য:</span>
           <span className="font-bangla font-semibold text-foreground">{formatPrice(subtotal)}</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="font-body text-[15px] text-muted-foreground">Delivery চার্জ:</span>
+          <span className="font-body text-[15px] text-muted-foreground">ডেলিভারি চার্জ:</span>
           <div className="flex items-center gap-2">
-            <span className="font-bangla font-bold text-trust">Free</span>
+            <span className="font-bangla font-bold text-trust">ফ্রি</span>
             <span className="font-body text-xs text-muted-foreground/60 line-through">৳৮০</span>
           </div>
         </div>
         {discountPct > 0 && (
           <div className="flex justify-between items-center animate-fade-in">
-            <span className="font-body text-[15px] text-muted-foreground">Bulk ছাড় ({discountPct}%):</span>
+            <span className="font-body text-[15px] text-muted-foreground">বাল্ক ছাড় ({discountPct}%):</span>
             <span className="font-bangla font-bold text-trust">- {formatPrice(discount)}</span>
           </div>
         )}
@@ -207,9 +207,9 @@ const CheckoutSection = () => {
       <div className="bg-trust/[0.06] border border-trust/20 rounded-[10px] p-3.5 mt-4">
         <div className="flex items-center gap-2.5">
           <Wallet className="h-5 w-5 text-trust" />
-          <span className="font-body font-semibold text-[15px] text-trust">Cash on Delivery</span>
+          <span className="font-body font-semibold text-[15px] text-trust">ক্যাশ অন ডেলিভারি</span>
         </div>
-        <p className="font-body text-xs text-muted-foreground mt-1.5 pl-[30px]">Delivery-র সময় টাকা দিন</p>
+        <p className="font-body text-xs text-muted-foreground mt-1.5 pl-[30px]">ডেলিভারির সময় টাকা দিন</p>
       </div>
     </div>
   );
@@ -348,7 +348,7 @@ const CheckoutSection = () => {
                 </InputWrapper>
 
                 {/* Phone */}
-                <InputWrapper field="phone" label="Phone নম্বর (১১ ডিজিট)" required helper="যেমন: 01712345678, 01812345678">
+                <InputWrapper field="phone" label="ফোন নম্বর (১১ ডিজিট)" required helper="যেমন: ০১৭১২৩৪৫৬৭৮, ০১৮১২৩৪৫৬৭৮">
                   <input
                     type="tel"
                     inputMode="numeric"
@@ -367,7 +367,7 @@ const CheckoutSection = () => {
                 </InputWrapper>
 
                 {/* Email */}
-                <InputWrapper field="email" label="Email Address" optional helper="Order Confirmation এর জন্য Email পাবেন">
+                <InputWrapper field="email" label="ইমেইল" optional helper="Order নিশ্চিতকরণের জন্য ইমেইল পাবেন">
                   <input
                     type="email"
                     inputMode="email"
@@ -383,7 +383,7 @@ const CheckoutSection = () => {
                 {/* Address */}
                 <div className="space-y-2.5">
                   <Label className="font-bangla text-base font-semibold text-foreground flex items-center gap-1.5">
-                    সম্পূর্ণ Delivery ঠিকানা <span className="text-primary">*</span>
+                    সম্পূর্ণ ডেলিভারি ঠিকানা <span className="text-primary">*</span>
                   </Label>
                   <div className="relative">
                     <textarea
@@ -414,21 +414,21 @@ const CheckoutSection = () => {
                   )}
                   <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <Info className="h-3.5 w-3.5 flex-shrink-0" />
-                    <span className="font-bangla">Courier সঠিকভাবে পৌঁছাতে বিস্তারিত ঠিকানা দিন</span>
+                    <span className="font-bangla">কুরিয়ার সঠিকভাবে পৌঁছাতে বিস্তারিত ঠিকানা দিন</span>
                   </p>
                 </div>
 
                 {/* Payment Method (Locked) */}
                 <div className="space-y-2.5">
-                  <Label className="font-bangla text-base font-semibold text-foreground">Payment পদ্ধতি</Label>
+                  <Label className="font-bangla text-base font-semibold text-foreground">পেমেন্ট পদ্ধতি</Label>
                   <div className="flex items-center h-14 px-5 rounded-[10px] border-2 border-trust/25 bg-trust/[0.08] cursor-not-allowed">
                     <Lock className="h-5 w-5 text-trust" />
-                    <span className="font-bangla font-semibold text-[17px] text-trust mx-auto">Cash on Delivery (COD)</span>
+                    <span className="font-bangla font-semibold text-[17px] text-trust mx-auto">ক্যাশ অন ডেলিভারি</span>
                     <CheckCircle2 className="h-5 w-5 text-trust" />
                   </div>
                   <div className="flex items-center gap-2 bg-trust/[0.04] border border-trust/15 rounded-lg p-3">
                     <ShieldCheck className="h-4 w-4 text-trust flex-shrink-0" />
-                    <span className="font-body text-sm text-muted-foreground">পণ্য হাতে পেয়ে নিরাপদে টাকা দিন। কোনো Advance Payment লাগবে না।</span>
+                    <span className="font-body text-sm text-muted-foreground">পণ্য হাতে পেয়ে নিরাপদে টাকা দিন। কোনো অগ্রিম পেমেন্ট লাগবে না।</span>
                   </div>
                 </div>
 
@@ -465,8 +465,8 @@ const CheckoutSection = () => {
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
                   {[
                     { icon: ShieldCheck, text: "সুরক্ষিত" },
-                    { icon: Truck, text: "Free Delivery" },
-                    { icon: RefreshCcw, text: "Return Guarantee" },
+                    { icon: Truck, text: "ফ্রি ডেলিভারি" },
+                    { icon: RefreshCcw, text: "রিটার্ন গ্যারান্টি" },
                   ].map(({ icon: Icon, text }) => (
                     <div key={text} className="flex items-center gap-2 bg-trust/[0.06] border border-trust/15 rounded-full px-4 py-2.5 min-h-[44px]">
                       <Icon className="h-4 w-4 text-trust" />

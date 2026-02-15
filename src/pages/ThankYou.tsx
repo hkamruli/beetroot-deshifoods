@@ -6,8 +6,8 @@ const steps = [
   {
     icon: Phone,
     num: "১",
-    title: "Phone Confirmation",
-    desc: "২৪ ঘন্টার মধ্যে আমরা আপনাকে Phone করে Order নিশ্চিত করব",
+    title: "ফোনে নিশ্চিতকরণ",
+    desc: "২৪ ঘন্টার মধ্যে আমরা আপনাকে ফোন করে Order নিশ্চিত করব",
   },
   {
     icon: Truck,
@@ -18,7 +18,7 @@ const steps = [
   {
     icon: Package,
     num: "৩",
-    title: "Delivery ও Payment",
+    title: "ডেলিভারি ও পেমেন্ট",
     desc: "পণ্য হাতে পেয়ে যাচাই করে টাকা দিন",
   },
 ];
@@ -26,7 +26,7 @@ const steps = [
 const ThankYou = () => {
   const [params] = useSearchParams();
   const order = params.get("order") || "ORD-XXXXXXXX-XXXX";
-  const product = params.get("product") || "Organic বিটরুট পাউডার";
+  const product = params.get("product") || "অর্গানিক বিটরুট পাউডার";
   const qty = params.get("qty") || "1";
   const total = params.get("total") || "0";
 
@@ -35,7 +35,7 @@ const ThankYou = () => {
     { label: "পণ্য:", value: product },
     { label: "পরিমাণ:", value: `${qty}টি` },
     { label: "মোট মূল্য:", value: `৳${Number(total).toLocaleString("en-IN")}`, highlight: true },
-    { label: "Payment পদ্ধতি:", value: "Cash on Delivery", icon: Wallet },
+    { label: "পেমেন্ট পদ্ধতি:", value: "ক্যাশ অন ডেলিভারি", icon: Wallet },
   ];
 
   return (
@@ -52,7 +52,7 @@ const ThankYou = () => {
         <h1 className="font-bangla text-3xl md:text-[42px] font-bold text-foreground text-center mb-4 leading-tight">
           Order সফলভাবে সম্পন্ন হয়েছে! 🎉
         </h1>
-        <p className="font-body text-lg md:text-xl text-muted-foreground text-center mb-12 leading-relaxed max-w-xl mx-auto">
+        <p className="font-bangla text-lg md:text-xl text-muted-foreground text-center mb-12 leading-relaxed max-w-xl mx-auto">
           আপনার Order-এর জন্য ধন্যবাদ। শীঘ্রই আমরা আপনার সাথে যোগাযোগ করব।
         </p>
 
@@ -88,12 +88,12 @@ const ThankYou = () => {
                 <div className="bg-primary/10 rounded-full p-4">
                   <Icon className="h-10 w-10 text-primary" />
                 </div>
-                <span className="absolute -top-1 -right-1 w-7 h-7 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-english font-bold text-sm border-2 border-white">
+                <span className="absolute -top-1 -right-1 w-7 h-7 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bangla font-bold text-sm border-2 border-white">
                   {num}
                 </span>
               </div>
               <h3 className="font-bangla font-semibold text-lg text-foreground mb-2">{title}</h3>
-              <p className="font-body text-sm text-muted-foreground leading-relaxed">{desc}</p>
+              <p className="font-bangla text-sm text-muted-foreground leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
@@ -109,10 +109,10 @@ const ThankYou = () => {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button asChild variant="cta" size="cta" className="font-bangla w-full sm:w-auto">
-            <Link to="/">Home Page-এ ফিরুন</Link>
+            <Link to="/">হোম পেজে ফিরুন</Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="font-bangla w-full sm:w-auto border-2 border-primary text-primary hover:bg-primary/[0.05]">
-            <a href="tel:+8801712345678">Support-এ যোগাযোগ করুন</a>
+            <a href="tel:+8801712345678">সাপোর্টে যোগাযোগ করুন</a>
           </Button>
         </div>
       </div>
