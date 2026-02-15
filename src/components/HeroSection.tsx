@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Truck, MapPin, Leaf } from "lucide-react";
+import { CheckCircle2, Truck, MapPin, Leaf, Clock } from "lucide-react";
 import heroImage from "@/assets/beetroot-hero.jpg";
+import { useCountdown } from "@/hooks/useCountdown";
 
 const HeroSection = () => {
+  const { hours, minutes, seconds, isExpired } = useCountdown();
+
   const scrollToCheckout = () => {
     document.getElementById("checkout")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -51,6 +54,21 @@ const HeroSection = () => {
                 কোনো কেমিকেল নয়, শুধু প্রাকৃতিক শক্তি
               </p>
             </div>
+
+            {/* Countdown Timer */}
+            {!isExpired && (
+              <div className="inline-flex items-center gap-3 bg-primary/[0.08] border border-primary/20 rounded-xl px-5 py-3">
+                <Clock className="h-5 w-5 text-primary animate-pulse" />
+                <span className="font-bangla font-bold text-sm text-primary">অফার শেষ হবে:</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="bg-primary text-primary-foreground font-english font-bold text-lg px-2.5 py-1 rounded-lg min-w-[40px] text-center">{hours}</span>
+                  <span className="text-primary font-bold">:</span>
+                  <span className="bg-primary text-primary-foreground font-english font-bold text-lg px-2.5 py-1 rounded-lg min-w-[40px] text-center">{minutes}</span>
+                  <span className="text-primary font-bold">:</span>
+                  <span className="bg-primary text-primary-foreground font-english font-bold text-lg px-2.5 py-1 rounded-lg min-w-[40px] text-center">{seconds}</span>
+                </div>
+              </div>
+            )}
 
             {/* Primary CTA */}
             <div className="pt-2">

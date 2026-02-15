@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Zap } from "lucide-react";
+import { CheckCircle, Zap, Clock, Package } from "lucide-react";
+import { useCountdown } from "@/hooks/useCountdown";
 
 const packages = [
   {
@@ -8,9 +9,6 @@ const packages = [
     name: "২৫০ গ্রাম Jar",
     price: "৮৫০",
     priceNum: 850,
-    originalPrice: "",
-    originalNum: 0,
-    savings: "",
     badge: "",
     badgeColor: "",
   },
@@ -19,9 +17,6 @@ const packages = [
     name: "৫০০ গ্রাম Jar",
     price: "১,৪৫০",
     priceNum: 1450,
-    originalPrice: "",
-    originalNum: 0,
-    savings: "",
     badge: "জনপ্রিয়",
     badgeColor: "bg-trust text-trust-foreground",
   },
@@ -30,9 +25,6 @@ const packages = [
     name: "২x৫০০ গ্রাম Combo",
     price: "২,৬০০",
     priceNum: 2600,
-    originalPrice: "",
-    originalNum: 0,
-    savings: "",
     badge: "সেরা দাম",
     badgeColor: "bg-primary text-primary-foreground",
   },
@@ -53,7 +45,7 @@ const bundles = [
     originalPrice: "৳২,৪০০",
     savings: "৳৮০০ বাঁচান",
     highlighted: true,
-    badge: "সেরা দাম",
+    badge: "সবচেয়ে জনপ্রিয়",
   },
   {
     name: "৪x৫০০ গ্রাম Jar",
@@ -61,20 +53,20 @@ const bundles = [
     originalPrice: "৳৪,৮০০",
     savings: "৳১,৯০০ বাঁচান",
     highlighted: false,
-    badge: "",
+    badge: "সেরা দাম",
   },
 ];
 
+const STOCK_LEFT = 17;
+
 const PricingSection = () => {
   const [selected, setSelected] = useState("500g");
+  const { hours, minutes, seconds, isExpired } = useCountdown();
 
   const scrollToCheckout = () => {
     document.getElementById("checkout")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const selectedPkg = packages.find((p) => p.id === selected)!;
-
-  // Dynamic pricing display based on selection
   const priceMap: Record<string, { regular: string; offer: string; savings: string; percent: string }> = {
     "250g": { regular: "৳১,২০০", offer: "৳৮৫০", savings: "৳৩৫০", percent: "২৯%" },
     "500g": { regular: "৳২,১০০", offer: "৳১,৪৫০", savings: "৳৬৫০", percent: "৩১%" },
@@ -89,32 +81,53 @@ const PricingSection = () => {
       <div className="bg-primary rounded-b-xl md:rounded-b-2xl py-4 px-6 text-center mx-auto max-w-[1200px]">
         <p className="font-bangla text-primary-foreground text-base md:text-lg font-bold flex items-center justify-center gap-2">
           <Zap className="h-5 w-5 fill-current" />
-          মাত্র ২৪ ঘন্টার মধ্যে Order করুন — Stock সীমিত!
+          মাত্র ২৪ ঘন্টার মধ্যে অর্ডার করুন — Stock সীমিত!
           <Zap className="h-5 w-5 fill-current" />
         </p>
       </div>
 
       <div className="mx-auto max-w-[1200px] py-16 md:py-[100px] px-6 md:px-[60px]">
         {/* Headline */}
-        <div className="text-center mb-12 md:mb-[50px]">
+        <div className="text-center mb-8 md:mb-10">
           <h2 className="font-bangla text-[30px] md:text-[44px] font-bold text-primary mb-4 leading-tight">
-            বিশেষ Offer — সীমিত সময়ের জন্য
+            বিশেষ অফার — সীমিত সময়ের জন্য
           </h2>
-          <p className="text-base md:text-lg text-muted-foreground">
-            এখনই Order করুন এবং বাঁচান
+          <p className="text-base md:text-lg text-muted-foreground mb-6">
+            এখনই অর্ডার করুন এবং বাঁচান
           </p>
+
+          {/* Countdown + Stock Row */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            {/* Countdown Timer */}
+            {!isExpired && (
+              <div className="inline-flex items-center gap-3 bg-primary/[0.08] border border-primary/20 rounded-xl px-5 py-3">
+                <Clock className="h-5 w-5 text-primary animate-pulse" />
+                <span className="font-bangla font-bold text-sm text-primary">অফার শেষ হবে:</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="bg-primary text-primary-foreground font-english font-bold text-lg px-2.5 py-1 rounded-lg min-w-[40px] text-center">{hours}</span>
+                  <span className="text-primary font-bold">:</span>
+                  <span className="bg-primary text-primary-foreground font-english font-bold text-lg px-2.5 py-1 rounded-lg min-w-[40px] text-center">{minutes}</span>
+                  <span className="text-primary font-bold">:</span>
+                  <span className="bg-primary text-primary-foreground font-english font-bold text-lg px-2.5 py-1 rounded-lg min-w-[40px] text-center">{seconds}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Stock Counter */}
+            <div className="inline-flex items-center gap-2.5 bg-destructive/[0.08] border border-destructive/20 rounded-xl px-5 py-3">
+              <Package className="h-5 w-5 text-destructive" />
+              <span className="font-bangla font-bold text-sm text-destructive">
+                মাত্র <span className="font-english text-lg">{STOCK_LEFT}</span> টি বাকি আছে!
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Main Pricing Card */}
+        {/* Main Pricing Card — removed সবচেয়ে জনপ্রিয় badge */}
         <div className="relative mx-auto max-w-[500px] bg-card rounded-[20px] border-[3px] border-primary p-8 md:p-10 shadow-[0_12px_40px_rgba(169,29,58,0.15)] mb-16 md:mb-[60px]">
-          {/* Popular Badge */}
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground font-bangla text-sm font-bold px-6 py-2 rounded-full shadow-cta whitespace-nowrap">
-            সবচেয়ে জনপ্রিয়
-          </div>
-
           {/* Package Selector */}
-          <h3 className="font-bangla text-xl font-semibold text-foreground mb-6 mt-2 text-center">
-            আপনার Package নির্বাচন করুন
+          <h3 className="font-bangla text-xl font-semibold text-foreground mb-6 text-center">
+            আপনার প্যাকেজ নির্বাচন করুন
           </h3>
 
           <div className="space-y-3 mb-8">
@@ -180,7 +193,7 @@ const PricingSection = () => {
             className="w-full mt-8 font-bangla text-lg h-[60px] md:h-[60px]"
             onClick={scrollToCheckout}
           >
-            এখনই Order করুন
+            এখনই অর্ডার করুন
           </Button>
         </div>
 
@@ -203,7 +216,11 @@ const PricingSection = () => {
             >
               {/* Badge */}
               {bundle.badge && (
-                <div className="absolute -top-3 right-4 bg-primary text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full">
+                <div className={`absolute -top-3 right-4 text-xs font-bold px-4 py-1.5 rounded-full ${
+                  bundle.badge === "সবচেয়ে জনপ্রিয়"
+                    ? "bg-trust text-trust-foreground"
+                    : "bg-primary text-primary-foreground"
+                }`}>
                   {bundle.badge}
                 </div>
               )}
